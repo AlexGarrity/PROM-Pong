@@ -8,6 +8,7 @@ class Color:
     BLUE = 34
     WHITE = 97
 
+
 # Serial bus is used for displaying on the screen
 class SerialBus:
     serial_bus = None
@@ -17,7 +18,7 @@ class SerialBus:
             self.create_bus()
 
     def create_bus(self):
-        self.serial_bus = Serial("/dev/ttyAMA0", 230400)
+        self.serial_bus = Serial("/dev/ttyAMA0", 115200)
 
     def is_bus_open(self):
         if self.serial_bus is None:

@@ -39,6 +39,7 @@ ballPos = [3, constants.height // 2]
 ballDirectionX = 1
 ballDirectionY = 0
 
+board.clear()
 board.updateScore(0)
 board.updateScore(0, True)
 board.updateBats(playerOnePos, playerTwoPos, playerOneBig, playerTwoBig)

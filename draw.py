@@ -47,7 +47,7 @@ class Board():
         self._length = length
         self._height = height
         self.clear()
-        self.clearLastBoard()
+        self.clearLastBoard(False)
 
     # Create our output for the console to print out
     def draw(self):
@@ -67,8 +67,14 @@ class Board():
     def clear(self):
         self._board = [[False] * self._length for _ in range(self._height)]
 
-    def clearLastBoard(self):
-        self._lastBoard = [[False] * self._length for _ in range(self._height)]
+    def clearScreen(self, value):
+        self.clear()
+        self.clearLastBoard(True)
+        self.draw()
+
+    def clearLastBoard(self, value):
+        if value:
+            self._lastBoard = [[value] * self._length for _ in range(self._height)]
 
     # Initialise our board
     def new(self):

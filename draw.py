@@ -15,7 +15,8 @@ class Board():
     _playerOneBig = False
     _playerTwoBig = False
     # The pixels that are filled in the 3x5 space our numbers take.
-    _numbers = { 0:
+    _numbers = {
+                 0:
                     [0, 1, 2, 3, 5, 6, 8, 9, 11, 12, 13, 14],
                  1:
                     [1, 4, 7, 10, 13],
@@ -35,7 +36,6 @@ class Board():
                     [0, 1, 2, 3, 5, 6, 7, 8, 9, 11, 12, 13, 14],
                  9:
                     [0, 1, 2, 3, 5, 6, 7, 8, 11, 14]
-                 
             }
     # hardcoded positions. too difficult to scale lettering to really small game dimensions
     _letters = [ [0, 0], [1, 1], [2, 2], [3, 3], [4, 2], [5, 1], [6, 2], [7, 3], [8, 2], 

@@ -1,4 +1,6 @@
 
+
+
 class Debouncer:
 
     # The current state of the switch
@@ -31,6 +33,6 @@ class Debouncer:
     def update(self):
         self.last_signal = self.current_signal
         # Get the current signal here
-        self.delta_signal = asb(self.last_signal - self.current_signal)
+        self.delta_signal = abs(self.last_signal - self.current_signal)
         if self.delta_signal > self.half_signal:
             self.change_state()

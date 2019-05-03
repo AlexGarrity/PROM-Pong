@@ -159,6 +159,16 @@ class Board():
         self._ballX = x
         self._ballY = y
 
+        #Update our GPIO LED depending on where the ball is. We can just clear every led first since
+        #we dont know the last pos of the ball and this is easy
+
+        for i in leds:
+            GPIO.output(i, False)
+        ballpos = (80 // x) % 8
+
+        GPIO.output(leds[ballpos], True)
+
+
     def updateWinner(self, playerTwo = False):
         offsetX = 57 if playerTwo else 2
         offsetY = 4 if playerTwo else 1

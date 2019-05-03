@@ -1,5 +1,13 @@
 import SerialBus
+import RPi.GPIO as GPIO
 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+leds = [5, 6, 12, 13, 16, 19, 20, 26]
+for i in leds:
+    #print("Setting up " + str(i))
+    GPIO.setup(i, GPIO.OUT)
 
 class Board():
 

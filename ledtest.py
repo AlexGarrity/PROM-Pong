@@ -31,4 +31,4 @@ while True:
         else:
             print(str(tempNum) + " is smaller than " + str(2 ** i))
             GPIO.output(leds[i - 1], False)
-    time.sleep(0.25)
+    time.sleep(0.1)

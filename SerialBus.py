@@ -14,43 +14,54 @@ class SerialBus:
     serial_bus = None
 
     def __init__(self):
-        if self.serial_bus is None:
-            self.create_bus()
+        return
+        #if self.serial_bus is None:
+        #    self.create_bus()
 
     def create_bus(self):
-        self.serial_bus = Serial("/dev/ttyAMA0", 115200)
+        return
+        #self.serial_bus = Serial("/dev/ttyAMA0", 115200)
 
     def is_bus_open(self):
-        if self.serial_bus is None:
-            return False
-        if not self.serial_bus.isOpen():
-            return False
-        return True
+        return
+        #if self.serial_bus is None:
+        #    return False
+        #if not self.serial_bus.isOpen():
+        #    return False
+        #return True
 
     def write(self, data):
-        if self.is_bus_open():
-            self.serial_bus.write(str(data))
+        return
+        #if self.is_bus_open():
+            #self.serial_bus.write(str(data))
 
     def write_to_position(self, character, x, y):
-        self.set_cursor_position(x, y)
-        self.write(character)
+        return
+        #self.set_cursor_position(x, y)
+        #self.write(character)
 
     def write_line(self, data):
-        if self.is_bus_open():
-            self.serial_bus.write(str(data) + "\r\n")
+        return
+        #if self.is_bus_open():
+        #    self.serial_bus.write(str(data) + "\r\n")
 
     def clear_screen(self):
-        self.set_cursor_position(0, 0)
-        self.write(chr(27) + "c")
+        return
+        #self.set_cursor_position(0, 0)
+        #self.write(chr(27) + "c")
 
     def new_line(self):
-        self.write_line("")
+        return
+        #self.write_line("")
 
     def set_cursor_position(self, x_position, y_position):
-        self.write(chr(27) + "[%s;%sH" % (x_position + 1, y_position + 1))
+        return
+        #self.write(chr(27) + "[%s;%sH" % (x_position + 1, y_position + 1))
 
     def set_foreground_color(self, color):
-        self.write(chr(27) + "[" + str(color) + ";0m")
+        return
+        #self.write(chr(27) + "[" + str(color) + ";0m")
 
     def set_background_color(self, color):
-        self.write(chr(27) + "[0;" + str(color + 10) + "m")
+        return
+        #self.write(chr(27) + "[0;" + str(color + 10) + "m")

@@ -81,7 +81,7 @@ class Board():
         self.draw()
 
     def clearLastBoard(self, value):
-        if value:
+        if value is not None:
             self._lastBoard = [[value] * self._length for _ in range(self._height)]
 
     # Initialise our board
@@ -141,7 +141,7 @@ class Board():
             self._board[playerOnePos - 2][playerOneBatX] = True
             self._board[playerOnePos + 2][playerOneBatX] = True
             self._board[playerOnePos + 3][playerOneBatX] = True
-            
+
         self._board[playerTwoPos - 1][playerTwoBatX] = True
         self._board[playerTwoPos][playerTwoBatX] = True
         self._board[playerTwoPos + 1][playerTwoBatX] = True
@@ -164,7 +164,9 @@ class Board():
 
         for i in leds:
             GPIO.output(i, False)
-        ballpos = (80 // x) % 8
+
+        #could have checked board length. didnt because we dont get marked on variable board size.
+        ballpos = int(x / 10)
 
         GPIO.output(leds[ballpos], True)
 

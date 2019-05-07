@@ -38,10 +38,10 @@ class Board():
                     [0, 1, 2, 3, 5, 6, 7, 8, 11, 14]
             }
     # hardcoded positions. too difficult to scale lettering to really small game dimensions
-    _letters = [ [0, 0], [1, 1], [2, 2], [3, 3], [4, 2], [5, 1], [6, 2], [7, 3], [8, 2], 
-                 [9, 1], [10, 0], [12, 0], [12, 1], [12, 2], [12, 3], [13, 0], [13, 3], 
-                 [14, 0], [14, 3], [15, 0], [15, 1], [15, 2], [15, 3], [17, 0], [17, 1], 
-                 [17, 2], [17, 3], [18, 1], [19, 2], [20, 0], [20, 1], [20, 2], [20, 3] ]
+    _letters = [[0, 0], [1, 1], [2, 2], [3, 3], [4, 2], [5, 1], [6, 2], [7, 3], [8, 2],
+                [9, 1], [10, 0], [12, 0], [12, 1], [12, 2], [12, 3], [13, 0], [13, 3],
+                [14, 0], [14, 3], [15, 0], [15, 1], [15, 2], [15, 3], [17, 0], [17, 1],
+                [17, 2], [17, 3], [18, 1], [19, 2], [20, 0], [20, 1], [20, 2], [20, 3]]
 
     def __init__(self, length, height):
         self._length = length
@@ -73,7 +73,7 @@ class Board():
         self.draw()
 
     def clearLastBoard(self, value):
-        if value:
+        if value is not None:
             self._lastBoard = [[value] * self._length for _ in range(self._height)]
 
     # Initialise our board

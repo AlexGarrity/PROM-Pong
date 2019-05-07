@@ -28,6 +28,7 @@ MANIFEST
 # IDE
 .idea/
 .iml
+.idea/workspace.xml
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

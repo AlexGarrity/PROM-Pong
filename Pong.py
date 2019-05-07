@@ -3,7 +3,7 @@ import Draw
 import Constants
 import Timing
 import JoystickController
-
+import Glow
 
 class Ball:
     position = [3, Constants.height // 2]
@@ -189,10 +189,12 @@ class Pong:
         # If a player has scored, update their score and change the state to serving
         if self.ball.position[0] == 0:
             self.player_one.score += 1
+            Glow.score()
             self.set_serving()
             self.board.updateScore(self.player_one.score)
         elif self.ball.position[0] == Constants.length - 1:
             self.player_two.score += 1
+            Glow.score()
             self.set_serving()
             self.board.updateScore(self.player_two.score, True)
 

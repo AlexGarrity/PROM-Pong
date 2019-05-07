@@ -1,5 +1,13 @@
 import SerialBus
+import RPi.GPIO as GPIO
 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+leds = [5, 6, 12, 13, 16, 19, 20, 26]
+for i in leds:
+    #print("Setting up " + str(i))
+    GPIO.setup(i, GPIO.OUT)
 
 class Board():
 
@@ -133,7 +141,7 @@ class Board():
             self._board[playerOnePos - 2][playerOneBatX] = True
             self._board[playerOnePos + 2][playerOneBatX] = True
             self._board[playerOnePos + 3][playerOneBatX] = True
-            
+
         self._board[playerTwoPos - 1][playerTwoBatX] = True
         self._board[playerTwoPos][playerTwoBatX] = True
         self._board[playerTwoPos + 1][playerTwoBatX] = True
@@ -150,6 +158,18 @@ class Board():
     def updateBall(self, x, y):
         self._ballX = x
         self._ballY = y
+
+        #Update our GPIO LED depending on where the ball is. We can just clear every led first since
+        #we dont know the last pos of the ball and this is easy
+
+        for i in leds:
+            GPIO.output(i, False)
+
+        #could have checked board length. didnt because we dont get marked on variable board size.
+        ballpos = int(x / 10)
+
+        GPIO.output(leds[ballpos], True)
+
 
     def updateWinner(self, playerTwo = False):
         offsetX = 57 if playerTwo else 2

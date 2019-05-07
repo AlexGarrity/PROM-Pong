@@ -2,7 +2,7 @@ import random
 import draw
 import constants
 import time
-
+import glow
 import timing
 
 
@@ -145,11 +145,13 @@ def start():
             # check if ball is at left/right edge, increase score, next serve.
             if ballPos[0] == 0:
                 playerTwoScore += 1
+                glow.score()
                 serving = True
                 playerOnePos = constants.height // 2
                 playerTwoPos = constants.height // 2
             elif ballPos[0] == constants.length - 1:
                 playerOneScore += 1
+                glow.score()
                 serving = True
                 playerOnePos = constants.height // 2
                 playerTwoPos = constants.height // 2

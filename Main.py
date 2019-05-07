@@ -1,7 +1,8 @@
 
-import pong
+import Pong
 
 # Can be used to initialise settings
 
 if __name__ == "__main__":
-    pong.start()
+    application = Pong.Pong()
+    application.start()

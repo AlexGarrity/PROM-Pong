@@ -1,32 +1,28 @@
 import random
-import draw
-import constants
-import timing
+import Draw
+import Constants
+import Timing
+import JoystickController
 
 
 class Ball:
-    position = [3, constants.height // 2]
+    position = [3, Constants.height // 2]
     direction_x = 1
     direction_y = 0
 
-    speed = constants.speed[0]
+    speed = Constants.speed[0]
     time_to_next_move = 0.0
 
     def __init__(self):
         # Reset speed and direction
-        self.set_position()
-        self.set_direction()
+        self.set_position(None)
+        self.set_direction(None)
 
     def set_speed(self, speed):
         self.speed = speed
 
-    def set_position(self, *position):
-        # If a position is given, set it to that
-        if position is not None:
-            self.position = [position[0], position[1]]
-        # If there's no position, assume it's being reset
-        else:
-            self.position = [3, constants.height // 2]
+    def set_position(self, position = [3, Constants.height // 2]):
+        self.position = [position[0], position[1]]
 
     def set_direction(self, *direction):
         # If a direction is given, set it to that
@@ -49,7 +45,7 @@ class Ball:
 
 
 class Bat:
-    position = constants.height // 2
+    position = Constants.height // 2
     score = 0
 
     is_big = False
@@ -58,7 +54,7 @@ class Bat:
 
     def __init__(self, *position):
         if position is not None:
-            self.position = position[0]
+            self.position = position
 
     def update(self, delta_time, movement):
         self.big_time -= delta_time
@@ -72,7 +68,7 @@ class Bat:
             self.position = position
         # If there's no position, assume it's being reset
         else:
-            self.position = constants.height // 2
+            self.position = Constants.height // 2
 
     # We wanna make sure our midpoint doesn't mean we're outside our game.
     # So anything below 2 becomes 2, anything above 22 becomes 22. If big bats then 3 < x < 24
@@ -104,13 +100,15 @@ class Bat:
 class Pong:
 
     # Utility classes
-    timer = timing.Timing()
-    board = draw.Board(constants.length, constants.height)
+    timer = Timing.Timing()
+    board = Draw.Board(Constants.length, Constants.height)
 
     # Gameplay classes
     player_one = Bat()
     player_two = Bat()
     ball = Ball()
+
+    player_one_controller = JoystickController.JoystickController(1)
 
     # Game state vars
     serving = True
@@ -139,8 +137,12 @@ class Pong:
         if random.randint(0, 250) == 9:
             self.player_two.make_big()
 
+        # Update the status of the joystick controllers
+        self.player_one_controller.update()
+
         # Emulate random bat movement and update the big_time on the Bat
-        self.player_one.update(self.timer.deltaTime, random.randint(-1, 1))
+        #self.player_one.update(self.timer.deltaTime, random.randint(-1, 1))
+        self.player_one.update(self.timer.deltaTime, self.player_one_controller.get_delta_resistor_position())
         self.player_two.update(self.timer.deltaTime, random.randint(-1, 1))
 
         # If the current game state is serving, set up a serve
@@ -164,10 +166,10 @@ class Pong:
         else:
             # Move the ball
             self.ball.move(self.timer.deltaTime)
-            if self.ball.position[1] == 0 or self.ball.position[0] == constants.height - 1:
+            if self.ball.position[1] == 0 or self.ball.position[0] == Constants.height - 1:
                 self.ball.direction_y *= -1
 
-            if self.ball.position[0] == 2 or self.ball.position[0] == constants.length - 3:
+            if self.ball.position[0] == 2 or self.ball.position[0] == Constants.length - 3:
                 print("Ball may have hit bat")
 
                 if self.player_one.check_hit(self.ball.position[1]):
@@ -189,7 +191,7 @@ class Pong:
             self.player_one.score += 1
             self.set_serving()
             self.board.updateScore(self.player_one.score)
-        elif self.ball.position[0] == constants.length - 1:
+        elif self.ball.position[0] == Constants.length - 1:
             self.player_two.score += 1
             self.set_serving()
             self.board.updateScore(self.player_two.score, True)
@@ -210,12 +212,12 @@ class Pong:
         if not self.playerTwoIsServing:
             self.ball.set_position(3, self.player_one.position)
         else:
-            self.ball.set_position(constants.length - 4, self.player_two.position)
+            self.ball.set_position(Constants.length - 4, self.player_two.position)
 
     def reverse_ball_direction(self):
         self.ball.direction_y *= 1
         self.ball.direction_x *= -1
-        self.ball.set_speed(random.choice(constants.speed))
+        self.ball.set_speed(random.choice(Constants.speed))
 
     def check_winner(self):
         # If either player has a score greater than 9, they win

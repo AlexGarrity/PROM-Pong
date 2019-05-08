@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b7558e97-86e3-48b9-af83-fa31c2246e36" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sounds.py" beforeDir="false" afterPath="$PROJECT_DIR$/sounds.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pong.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pong.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sound.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,11 +33,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sounds.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Sound.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="495">
-              <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+              <caret line="33" selection-start-line="33" selection-end-line="33" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -49,6 +50,18 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
               <caret line="7" selection-start-line="7" selection-end-line="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Pong.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="407">
+              <caret line="220" column="19" selection-start-line="220" selection-start-column="19" selection-end-line="220" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -120,6 +133,7 @@
         <option value="$PROJECT_DIR$/glow.py" />
         <option value="$PROJECT_DIR$/pong.py" />
         <option value="$PROJECT_DIR$/sounds.py" />
+        <option value="$PROJECT_DIR$/Pong.py" />
       </list>
     </option>
   </component>
@@ -156,7 +170,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557310357827" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557310507322" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Project" />
@@ -192,7 +206,7 @@
       <workItem from="1556896701963" duration="1313000" />
       <workItem from="1556898159344" duration="1517000" />
       <workItem from="1556899847311" duration="1371000" />
-      <workItem from="1557309653447" duration="702000" />
+      <workItem from="1557309653447" duration="854000" />
     </task>
     <task id="LOCAL-00001" summary="test file for making sure I know how to use leds">
       <created>1556897161089</created>
@@ -229,11 +243,18 @@
       <option name="project" value="LOCAL" />
       <updated>1557230416340</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="sound code for start of game and ball hit, GPIO pin 10">
+      <created>1557310380331</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1557310380331</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19580000" />
+    <option name="totallyTimeSpent" value="19732000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1680" height="1023" extended-state="6" />
@@ -278,7 +299,8 @@
     <MESSAGE value="fixed pins image" />
     <MESSAGE value="basic gpio stuff" />
     <MESSAGE value="pyglow code for when a goal is scored" />
-    <option name="LAST_COMMIT_MESSAGE" value="pyglow code for when a goal is scored" />
+    <MESSAGE value="sound code for start of game and ball hit, GPIO pin 10" />
+    <option name="LAST_COMMIT_MESSAGE" value="sound code for start of game and ball hit, GPIO pin 10" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/PROM.iml">
@@ -314,13 +336,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/images/GPIO LED pins.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -341,12 +356,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sounds.py">
+    <entry file="file://$PROJECT_DIR$/Sound.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+          <caret line="33" selection-start-line="33" selection-end-line="33" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pong.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="407">
+          <caret line="220" column="19" selection-start-line="220" selection-start-column="19" selection-end-line="220" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>

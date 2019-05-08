@@ -148,9 +148,9 @@ class Pong:
             # Emulate a serve
             if random.randint(0, 100) == 9:
                 if not self.playerTwoIsServing:
-                    self.ball.set_direction(1, random.randrange(-1, 1, 2))
+                    self.ball.set_direction([1, random.randrange(-1, 1, 2)])
                 else:
-                    self.ball.set_direction(-1, random.randrange(-1, 1, 2))
+                    self.ball.set_direction([-1, random.randrange(-1, 1, 2)])
 
                 # Change the game state and the next serve
                 self.serving = False

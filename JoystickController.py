@@ -12,8 +12,8 @@ class JoystickController:
     # Vin3 = 0x30
     # Vin4 = 0x40
 
-    last_resistor_position = None
-    current_resistor_position = None
+    last_resistor_position = 0
+    current_resistor_position = 0
 
     resistor_address = None     # Vin1
     button_1_address = None     # Vin2

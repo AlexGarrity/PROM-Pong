@@ -5,6 +5,7 @@ import Timing
 import JoystickController
 import Glow
 
+
 class Ball:
     position = [3, Constants.height // 2]
     direction_x = 1
@@ -15,8 +16,8 @@ class Ball:
 
     def __init__(self):
         # Reset speed and direction
-        self.set_position(None)
-        self.set_direction(None)
+        self.set_position()
+        self.set_direction()
 
     def set_speed(self, speed):
         self.speed = speed
@@ -24,15 +25,10 @@ class Ball:
     def set_position(self, position = [3, Constants.height // 2]):
         self.position = [position[0], position[1]]
 
-    def set_direction(self, *direction):
-        # If a direction is given, set it to that
-        if direction is not None:
-            self.direction_x = direction[0]
-            self.direction_y = direction[1]
-        # If there's no direction, assume it's being reset
-        else:
-            self.direction_x = 1
-            self.direction_y = 0
+    def set_direction(self, direction = [1, 0]):
+        self.direction_x = direction[0]
+        self.direction_y = direction[1]
+
 
     def move(self, delta_time):
         self.time_to_next_move -= delta_time
@@ -52,7 +48,7 @@ class Bat:
     can_big = True
     big_time = 2000
 
-    def __init__(self, *position):
+    def __init__(self, position: int = None):
         if position is not None:
             self.position = position
 
@@ -108,7 +104,7 @@ class Pong:
     player_two = Bat()
     ball = Ball()
 
-    player_one_controller = JoystickController.JoystickController(1)
+    player_one_controller = JoystickController.JoystickController()
 
     # Game state vars
     serving = True
@@ -212,9 +208,9 @@ class Pong:
 
     def setup_serve(self):
         if not self.playerTwoIsServing:
-            self.ball.set_position(3, self.player_one.position)
+            self.ball.set_position([3, self.player_one.position])
         else:
-            self.ball.set_position(Constants.length - 4, self.player_two.position)
+            self.ball.set_position([Constants.length - 4, self.player_two.position])
 
     def reverse_ball_direction(self):
         self.ball.direction_y *= 1

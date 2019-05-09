@@ -10,20 +10,30 @@ DEVICE_BUS = 1
 DEVICE_ADDR = 0x38
 bus = smbus.SMBus(DEVICE_BUS)
 
-#any write value above 255 will really mess up everything so never do it ever
 
+#any write value above 255 will really mess up everything so never do it ever
 def setpin(i):
     pins = [254,  253, 251, 247, 239, 223, 191, 127, 255]
     bus.write_byte(DEVICE_ADDR, pins[i])
 
+
 def clearpin(i):
     bus.write_byte(255)
+
 
 for i in leds:
     #print("Setting up " + str(i))
     GPIO.setup(i, GPIO.OUT)
 
-class Board():
+
+class BoardPiece:
+    NET = 0
+    BAT = 1
+    BALL = 2
+    TEXT = 3
+
+
+class Board:
 
     serial_bus = SerialBus.SerialBus()
 
@@ -76,14 +86,27 @@ class Board():
         for y in range(self._height):
             for x in range(self._length):
                 if self._board[y][x] != self._lastBoard[y][x]:
-                    if self._board[y][x]:
-                        self.serial_bus.set_background_color(SerialBus.Color.WHITE)
+                    if not self._board[y][x]:
+                        piece_color = self._board[x][y]
+                        self.set_background_from_position(piece_color)
                         self.serial_bus.write_to_position(" ", y, x)
                     else:
                         self.serial_bus.set_background_color(SerialBus.Color.BLACK)
                         self.serial_bus.write_to_position(" ", y, x)
         self._lastBoard = self._board
         self.serial_bus.set_cursor_position(self._ballY, self._ballX)
+
+    def set_background_from_position(self, piece_color):
+        if piece_color == BoardPiece.TEXT:
+            self.serial_bus.set_background_color(SerialBus.Color.WHITE)
+        elif piece_color == BoardPiece.NET:
+            self.serial_bus.set_background_color(SerialBus.Color.BLUE)
+        elif piece_color == BoardPiece.BAT:
+            self.serial_bus.set_background_color(SerialBus.Color.RED)
+        elif piece_color == BoardPiece.BALL:
+            self.serial_bus.set_background_color(SerialBus.Color.GREEN)
+        else:
+            self.serial_bus.set_background_color(SerialBus.Color.BLACK)
 
     # Set our board to be completely empty
     def clear(self):
@@ -103,9 +126,9 @@ class Board():
 
         # Net in middle of board.
         for i in range(2, self._height, 4):
-            self._board[i][self._length // 2] = True
+            self._board[i][self._length // 2] = BoardPiece.NET
             if i + 1 != self._height:
-                self._board[i+1][self._length // 2] = True
+                self._board[i+1][self._length // 2] = BoardPiece.NET
 
     # We're using both commands anyways (usually. maybe we might want to just clear like in init),
     # so might as well merge.
@@ -131,7 +154,7 @@ class Board():
         for pixel in range(15):
             x = pixel % 3
             y = pixel // 3
-            self._board[y + yOffset][x + xOffset] = True and pixel in self._numbers[num] or False
+            self._board[y + yOffset][x + xOffset] = BoardPiece.TEXT and pixel in self._numbers[num] or False
 
     # debated func should just update a single bat, but decided on it updating both.
     # Reasoning is most likely both bats will change pos at same time
@@ -148,21 +171,21 @@ class Board():
         # Could check if our midpoint is outside the game, but we do this in the game logic.
 
         # colour the pixels our bats should be in
-        self._board[playerOnePos - 1][playerOneBatX] = True
-        self._board[playerOnePos][playerOneBatX] = True
-        self._board[playerOnePos + 1][playerOneBatX] = True
+        self._board[playerOnePos - 1][playerOneBatX] = BoardPiece.BAT
+        self._board[playerOnePos][playerOneBatX] = BoardPiece.BAT
+        self._board[playerOnePos + 1][playerOneBatX] = BoardPiece.BAT
         if playerOneBig:
-            self._board[playerOnePos - 2][playerOneBatX] = True
-            self._board[playerOnePos + 2][playerOneBatX] = True
-            self._board[playerOnePos + 3][playerOneBatX] = True
+            self._board[playerOnePos - 2][playerOneBatX] = BoardPiece.BAT
+            self._board[playerOnePos + 2][playerOneBatX] = BoardPiece.BAT
+            self._board[playerOnePos + 3][playerOneBatX] = BoardPiece.BAT
 
-        self._board[playerTwoPos - 1][playerTwoBatX] = True
-        self._board[playerTwoPos][playerTwoBatX] = True
-        self._board[playerTwoPos + 1][playerTwoBatX] = True
+        self._board[playerTwoPos - 1][playerTwoBatX] = BoardPiece.BAT
+        self._board[playerTwoPos][playerTwoBatX] = BoardPiece.BAT
+        self._board[playerTwoPos + 1][playerTwoBatX] = BoardPiece.BAT
         if playerTwoBig:
-            self._board[playerTwoPos - 2][playerTwoBatX] = True
-            self._board[playerTwoPos + 2][playerTwoBatX] = True
-            self._board[playerTwoPos + 3][playerTwoBatX] = True
+            self._board[playerTwoPos - 2][playerTwoBatX] = BoardPiece.BAT
+            self._board[playerTwoPos + 2][playerTwoBatX] = BoardPiece.BAT
+            self._board[playerTwoPos + 3][playerTwoBatX] = BoardPiece.BAT
 
     # draw our ball.  Ball could be in any position, so we can't just clear
     # the previous pos in case we destroy the net/scores
@@ -173,13 +196,13 @@ class Board():
         self._ballX = x
         self._ballY = y
 
-        #Update our GPIO LED depending on where the ball is. We can just clear every led first since
-        #we dont know the last pos of the ball and this is easy
+        # Update our GPIO LED depending on where the ball is. We can just clear every led first since
+        # we dont know the last pos of the ball and this is easy
 
         for i in leds:
             GPIO.output(i, False)
 
-        #could have checked board length. didnt because we dont get marked on variable board size.
+        # could have checked board length. didnt because we dont get marked on variable board size.
         ballpos = int(x / 10)
 
         GPIO.output(leds[ballpos], True)

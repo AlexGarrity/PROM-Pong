@@ -12,6 +12,9 @@ class JoystickController:
     # Vin3 = 0x30
     # Vin4 = 0x40
 
+    last_resistor_position = 0
+    current_resistor_position = 0
+
     resistor_address = None     # Vin1
     button_1_address = None     # Vin2
     button_2_address = None     # Vin3
@@ -31,6 +34,10 @@ class JoystickController:
         self.button_1_pressed = False
         self.button_2_pressed = False
 
+    def update(self):
+        self.last_resistor_position = self.current_resistor_position
+        self.current_resistor_position = self.get_resistor_position()
+
     def get_resistor_position(self):
         if self.control_bus is not None:
             if self.control_bus.is_bus_open():
@@ -38,3 +45,11 @@ class JoystickController:
                 pos = self.control_bus.read()
                 return I2CBus.swap_high_low_byte(pos)
         return None
+
+    def get_delta_resistor_position(self):
+        if abs(self.last_resistor_position - self.current_resistor_position) > 10:
+            if self.current_resistor_position < self.last_resistor_position:
+                return 1
+            elif self.current_resistor_position > self.last_resistor_position:
+                return -1
+        return 0

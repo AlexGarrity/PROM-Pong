@@ -29,7 +29,7 @@ class SerialBus:
 
     def write(self, data):
         if self.is_bus_open():
-            self.serial_bus.write(str(data))
+            self.serial_bus.write(bytes(data, "UTF-8"))
 
     def write_to_position(self, character, x, y):
         self.set_cursor_position(x, y)
@@ -37,7 +37,7 @@ class SerialBus:
 
     def write_line(self, data):
         if self.is_bus_open():
-            self.serial_bus.write(str(data) + "\r\n")
+            self.serial_bus.write(bytes(str(data) + "\r\n"), "UTF-8")
 
     def clear_screen(self):
         self.set_cursor_position(0, 0)

@@ -1,4 +1,6 @@
 from PyGlow import PyGlow
+
+
 import time
 glow = PyGlow()
 leds = [["White", 0], ["Blue", 0], ["Green", 0], ["Yellow", 0], ["Orange", 0], ["Red", 0]]

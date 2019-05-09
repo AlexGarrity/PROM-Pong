@@ -1,10 +1,24 @@
 import SerialBus
 import RPi.GPIO as GPIO
+import smbus
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 leds = [5, 6, 12, 13, 16, 19, 20, 26]
+DEVICE_BUS = 1
+DEVICE_ADDR = 0x38
+bus = smbus.SMBus(DEVICE_BUS)
+
+#any write value above 255 will really mess up everything so never do it ever
+
+def setpin(i):
+    pins = [254,  253, 251, 247, 239, 223, 191, 127, 255]
+    bus.write_byte(DEVICE_ADDR, pins[i])
+
+def clearpin(i):
+    bus.write_byte(255)
+
 for i in leds:
     #print("Setting up " + str(i))
     GPIO.setup(i, GPIO.OUT)
@@ -169,7 +183,7 @@ class Board():
         ballpos = int(x / 10)
 
         GPIO.output(leds[ballpos], True)
-
+        setpin(ballpos)
 
     def updateWinner(self, playerTwo = False):
         offsetX = 57 if playerTwo else 2

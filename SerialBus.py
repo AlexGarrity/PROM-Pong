@@ -6,7 +6,7 @@ class Color:
     RED = 31
     GREEN = 32
     BLUE = 34
-    WHITE = 97
+    WHITE = 37
 
 
 # Serial bus is used for displaying on the screen

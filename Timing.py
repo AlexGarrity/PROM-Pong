@@ -5,7 +5,8 @@ class Timing:
     lastTime = 0
     currentTime = 0
     deltaTime = 0
-    timePerFrame = 50
+    # It runs on a console, and console players can't see over 30FPS anyway, so 33ms will do...
+    timePerFrame = 66
     timeToNextFrame = 0
 
     def __init__(self):

@@ -1,6 +1,6 @@
 
-
-
+# Deprecated in favour of RPi.GPIO debouncing functionality
+# RPi offers much better response time
 class Debouncer:
 
     # The current state of the switch

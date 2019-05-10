@@ -1,9 +1,18 @@
 import I2CBus
+import GPIO
+import Constants
+
+from math import log
+
+
+import Constants
 
 
 # JoystickController should manage all aspects of the joystick
 class JoystickController:
     control_bus = None
+    debouncer = None
+    sw_debounce = False
 
     # These represent the commands used to get the states of the hardware
 
@@ -15,20 +24,22 @@ class JoystickController:
     last_resistor_position = 0
     current_resistor_position = 0
 
-    resistor_address = None     # Vin1
-    button_1_address = None     # Vin2
-    button_2_address = None     # Vin3
+    resistor_address = [Constants.resistor_address, Constants.resistor_code]     # Vin1
+    button_1_address = [Constants.button_address, Constants.button_code_11]     # Vin2
+    button_2_address = [Constants.button_address, Constants.button_code_12]     # Vin3
 
     resistor_position = None
     button_1_pressed = None
     button_2_pressed = None
 
-    def __init__(self):
+    voltage_interval = 4092 // Constants.height
+
+    def __init__(self, resistor_channel, button_1_gpio, button_2_gpio, sw_debounce):
         self.control_bus = I2CBus.I2CBus(0x21)
 
-        self.resistor_address = 0x10
-        self.button_1_address = 0x20
-        self.button_2_address = 0x30
+        self.resistor_address = resistor_channel
+        self.button_1_address = button_1_gpio
+        self.button_2_address = button_2_gpio
 
         self.resistor_position = self.get_resistor_position()
         self.button_1_pressed = False
@@ -38,18 +49,21 @@ class JoystickController:
         self.last_resistor_position = self.current_resistor_position
         self.current_resistor_position = self.get_resistor_position()
 
+
+    def get_button_state(self, debounce):
+            self.button_1_pressed = GPIO.get_channel_status(self.button_1_address)
+            self.button_2_pressed = GPIO.get_channel_status(self.button_2_address)
+
     def get_resistor_position(self):
         if self.control_bus is not None:
             if self.control_bus.is_bus_open():
                 self.control_bus.set_command(self.resistor_address)    # Set command to the right pins
-                pos = self.control_bus.read()
-                return I2CBus.swap_high_low_byte(pos)
+                self.current_resistor_position = self.control_bus.read()
+                self.resistor_position = I2CBus.swap_high_low_byte(self.current_resistor_position)
+                return self.resistor_position
         return None
 
-    def get_delta_resistor_position(self):
-        if abs(self.last_resistor_position - self.current_resistor_position) > 10:
-            if self.current_resistor_position < self.last_resistor_position:
-                return 1
-            elif self.current_resistor_position > self.last_resistor_position:
-                return -1
-        return 0
+    def get_resistor_screen_position(self):
+        return self.resistor_position // self.voltage_interval
+    # def get_button_states(self):
+        # Set I2C to get the

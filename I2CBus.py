@@ -50,7 +50,10 @@ class I2CBus:
                 return self.last_data
         return None
 
-    def write(self, data):
+    def write(self, data=None):
         if self.I2C_command is not None:
             if self.is_bus_open():
-                self.bus.write_byte_data(self.I2C_address, self.I2C_command, data)
+                if data is not None:
+                    self.bus.write_byte_data(self.I2C_address, self.I2C_command, data)
+                else:
+                    self.bus.write_byte(self.I2C_address, self.I2C_command)

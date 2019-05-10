@@ -271,7 +271,7 @@ class PyGlow:
                 self.__STATE['leds'].keys(),
                 p['brightness'], p['speed'], p['pulse_dir'])
         else:
-            self.__write_data(self.__STATE['leds'].iteritems())
+            self.__write_data(self.__STATE['leds'].items())
 
         # Reset the SET variable
         self.__STATE = {'leds': {}, 'params': {}}
@@ -325,7 +325,7 @@ class PyGlow:
             self.__write_data(
                 tuple(
                     (n, GAMMA_TABLE[int(b_val)])
-                    for n in self.__STATE['leds'].iterkeys()))
+                    for n in self.__STATE['leds'].keys()))
 
             # Sleep for certain period
             sleep(speed / steps / comp_const)

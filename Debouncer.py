@@ -1,4 +1,7 @@
 
+# Far more complicated than necessary, designed for use with floating point input
+# GPIO only provides 1 and 0, so use moving average cast to an int
+
 class Debouncer:
 
     # The current state of the switch
@@ -25,10 +28,7 @@ class Debouncer:
         self.stability_threshold = stability_threshold
 
     def change_state(self):
-        if self.current_signal < self.half_signal:
-            self.current_state = False
-        else:
-            self.current_state = True
+        self.current_state = not self.current_state
 
     def get_state(self):
         return self.current_state
@@ -40,16 +40,12 @@ class Debouncer:
             self.change_state()
 
     def detect_state_change(self):
-        if self.signal_history[2] >= self.signal_history[1] >= self.signal_history[0]:
-            if abs(self.signal_history[0] - self.signal_history[2]) > self.stability_threshold:
-                return 1
-        elif self.signal_history[0] >= self.signal_history[1] >= self.signal_history[2]:
-            if abs(self.signal_history[0] - self.signal_history[2]) > self.stability_threshold:
-                return 1
-        return 0
+        average = sum(self.signal_history) // 3
+        if self.current_signal != average:
+            return True
+        return False
 
     def add_to_history(self):
-        print ("Current signal: %i" % self.current_signal)
         self.signal_history.append(self.current_signal)
         if len(self.signal_history) > 3:
             self.signal_history.pop(0)

@@ -52,10 +52,11 @@ class Bat:
 
     is_big = False
     can_big = True
-    big_time = 2.0
+    big_time = Constants.big_time
 
     def __init__(self, position=None):
         if position is not None:
+
             self.position = position
 
     def update(self, delta_time, position):
@@ -184,11 +185,11 @@ class Pong:
                 self.ball.direction_y *= -1
                 self.ball.set_position([self.ball.position[0], self.ball.position[1] - 1])
 
-            if self.ball.position[0] == 2:
+            if self.ball.position[0] == 2 or self.ball.position[0] == 1:
                 if self.player_one.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
 
-            elif self.ball.position[0] == Constants.length - 3:
+            elif self.ball.position[0] == Constants.length - 3 or self.ball.position[0] == Constants.length - 2:
                 if self.player_two.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
 

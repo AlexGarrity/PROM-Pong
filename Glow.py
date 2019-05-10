@@ -11,10 +11,8 @@ def score():
     for turn in order:
         for led in range(6):
             if turn & led == led:
-                print("Turning on " + leds[led][0])
                 leds[led][1] += int(255 / 20)
             else:
-                print("Turning off " + leds[led][0])
                 leds[led][1] = 0
             glow.color(leds[led][0], leds[led][1])
         time.sleep(0.0625)

@@ -123,6 +123,8 @@ class Pong:
     gameOver = False
 
     def start(self):
+        Sound.start()
+
         self.board.prepare()
         # Setup the board by putting the bats and ball in the right place
         self.board.updateBats(self.player_one.position, self.player_two.position,
@@ -131,7 +133,6 @@ class Pong:
         self.board.updateScore(0, False)
         self.board.updateScore(0, True)
 
-        Sound.start()
         # Run the game loop until the game is over
         while not self.gameOver:
             self.game_loop()
@@ -189,10 +190,12 @@ class Pong:
             if self.ball.position[0] == 2 or self.ball.position[0] == 1:
                 if self.player_one.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
+                    Sound.hit()
 
             elif self.ball.position[0] == Constants.length - 3 or self.ball.position[0] == Constants.length - 2:
                 if self.player_two.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
+                    Sound.hit()
 
             # Check if the player wants to be big
             if self.player_one_controller.button_2_pressed == 0:

@@ -13,6 +13,7 @@ class BoardPiece:
 
 class Board:
     serial_bus = SerialBus.SerialBus()
+    GPIO.init()
 
     # Stuff for LEDS
     i2c_controller = I2CBus.I2CBus(Constants.led_address)
@@ -58,6 +59,8 @@ class Board:
                 [17, 2], [17, 3], [18, 1], [19, 2], [20, 0], [20, 1], [20, 2], [20, 3]]
 
     def __init__(self, length, height):
+
+
 
         for i in self.leds:
             GPIO.add_channel(i, True)

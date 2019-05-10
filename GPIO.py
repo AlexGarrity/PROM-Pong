@@ -5,8 +5,11 @@ import RPi.GPIO as gpio
 # Pretty much just a wrapper for RPi.GPIO
 
 channels_in_use = []
-gpio.setwarnings(False)
-gpio.setmode(gpio.BCM)
+
+
+def init():
+    gpio.setwarnings(False)
+    gpio.setmode(gpio.BCM)
 
 
 def add_channel(channel_number, output):

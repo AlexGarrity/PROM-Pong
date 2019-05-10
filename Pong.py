@@ -125,7 +125,8 @@ class Pong:
     gameOver = False
 
     def start(self):
-        Sound.start()
+        # Let's hope this works...
+        Sound.play_async(Sound.start_music)
 
         self.board.prepare()
         # Setup the board by putting the bats and ball in the right place
@@ -192,12 +193,12 @@ class Pong:
             if self.ball.position[0] == 2 or self.ball.position[0] == 1:
                 if self.player_one.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
-                    Sound.hit()
+                    Sound.play_async(Sound.hit_sequence)
 
             elif self.ball.position[0] == Constants.length - 3 or self.ball.position[0] == Constants.length - 2:
                 if self.player_two.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
-                    Sound.hit()
+                    Sound.play_async(Sound.hit_sequence)
 
             # Check if the player wants to be big
             if self.player_one_controller.button_2_pressed == 0:

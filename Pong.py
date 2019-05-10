@@ -39,13 +39,11 @@ class Ball:
             # Update the ball's position according to its direction
             self.position[0] += self.direction_x
             self.position[1] += self.direction_y
-            self.time_to_next_move = self.speed / 1000
-
+            self.time_to_next_move = self.speed
 
     def update(self, delta_time):
         self.time_to_next_move -= delta_time
         self.move()
-        print("X:%i\tY:%i\tt:%f\t" % (self.position[0], self.position[1], self.time_to_next_move))
 
 
 class Bat:
@@ -61,16 +59,21 @@ class Bat:
             self.position = position
 
     def update(self, delta_time, position):
-        self.big_time -= delta_time
-        if self.big_time <= 0 and self.is_big:
-            self.is_big = False
+        if self.is_big:
+            self.big_time -= delta_time
+            if self.big_time <= 0:
+                self.is_big = False
         self.set_position(position)
 
     def set_position(self, position=None):
         if position is None:
             position = Constants.height // 2
-        if 0 <= position < 23:
-            self.position = position
+        if self.is_big:
+            if 2 <= position < 20:
+                self.position = position
+        else:
+            if 0 <= position < 22:
+                self.position = position
 
     # We wanna make sure our midpoint doesn't mean we're outside our game.
     # So anything below 2 becomes 2, anything above 22 becomes 22. If big bats then 3 < x < 24
@@ -79,10 +82,10 @@ class Bat:
     def move(self, movement):
         self.position += movement
 
-        if self.position < (3 if self.is_big else 2):
-            self.position = (3 if self.is_big else 2)
-        elif self.position > (20 if self.is_big else 22):
-            self.position = (20 if self.is_big else 22)
+        if self.position < (4 if self.is_big else 2):
+            self.position = (4 if self.is_big else 2)
+        elif self.position > (18 if self.is_big else 22):
+            self.position = (18 if self.is_big else 22)
 
     def make_big(self):
         if self.can_big:
@@ -90,7 +93,7 @@ class Bat:
             self.can_big = False
 
     def check_hit(self, ball_y):
-        if self.is_big:
+        if not self.is_big:
             if -1 <= (self.position - ball_y) <= 1:
                 return True
         else:
@@ -109,7 +112,7 @@ class Pong:
     player_two = Bat()
     ball = Ball()
 
-    player_one_controller = JoystickController.JoystickController(0x10, 0x00, 0x00, False)
+    player_one_controller = JoystickController.JoystickController(0x10, 10, 9, True)
     player_two_controller = JoystickController.JoystickController(0x20, 0x00, 0x00, True)
 
     # Game state vars
@@ -140,44 +143,60 @@ class Pong:
         self.player_two_controller.update()
 
         # Emulate random bat movement and update the big_time on the Bat
-        # self.player_one.up        self._board[y][x] = BoardPiece.BALLdate(self.timer.deltaTime, random.randint(-1, 1))
         self.player_one.update(self.timer.deltaTime, self.player_one_controller.get_resistor_screen_position() + 1)
-        self.player_two.update(self.timer.deltaTime, self.player_two_controller.get_resistor_screen_position() + 1)
+        if self.ball.direction_x == 1:  # If the ball is coming towards the AI
+            ai_pos_delta = (self.ball.position[1] - self.player_two.position)
+        else:
+            ai_pos_delta = (Constants.height // 2 - self.player_two.position)
+        if ai_pos_delta != 0:   # If we're not /ing by 0
+            if random.randint(0, 1) == 1:   # 50/50 chance to move
+                self.player_two.update(self.timer.deltaTime, self.player_two.position + int(abs(ai_pos_delta) / ai_pos_delta))
 
         # If the current game state is serving, set up a serve
         if self.serving:
             self.setup_serve()
 
-
-
             # Emulate a serve
             if not self.playerTwoIsServing:
-                self.ball.set_direction([1, random.randrange(-1, 1, 2)])
+                if self.player_one_controller.button_1_pressed == 0:
+                    self.ball.set_direction([1, random.randrange(-1, 1)])
+                    self.serving = False
+                    self.serves += 1
+                    if self.serves % 5 == 0:
+                        self.playerTwoIsServing = not self.playerTwoIsServing
             else:
-                self.ball.set_direction([-1, random.randrange(-1, 1, 2)])
-
-            # Change the game state and the next serve
-            self.serving = False
-            self.serves += 1
-            if self.serves == 5:
-                self.playerTwoIsServing = not self.playerTwoIsServing
+                if random.randrange(1, 100) == 9:
+                    self.ball.set_direction([-1, random.randrange(-1, 1)])
+                    self.serving = False
+                    self.serves += 1
+                    if self.serves % 5 == 0:
+                        self.playerTwoIsServing = not self.playerTwoIsServing
 
         # If the current game state is not serving (ie. playing)
         else:
             # Move the ball
             self.ball.update(self.timer.deltaTime)
-            if self.ball.position[1] == 0 or self.ball.position[1] == Constants.height - 1:
+
+            if self.ball.position[1] == 0:
                 self.ball.direction_y *= -1
+                self.ball.set_position([self.ball.position[0], self.ball.position[1] + 1])
+            elif self.ball.position[1] == Constants.height - 1:
+                self.ball.direction_y *= -1
+                self.ball.set_position([self.ball.position[0], self.ball.position[1] - 1])
 
-            if self.ball.position[0] == 2 or self.ball.position[0] == Constants.length - 3:
-                print("Ball may have hit bat")
-
+            if self.ball.position[0] == 2:
                 if self.player_one.check_hit(self.ball.position[1]):
-                    print("Player one has hit the ball")
                     self.reverse_ball_direction()
-                elif self.player_two.check_hit(self.ball.position[1]):
-                    print("Player two has hit the ball")
+
+            elif self.ball.position[0] == Constants.length - 3:
+                if self.player_two.check_hit(self.ball.position[1]):
                     self.reverse_ball_direction()
+
+            # Check if the player wants to be big
+            if self.player_one_controller.button_2_pressed == 0:
+                self.player_one.make_big()
+            if self.player_two_controller.button_2_pressed == 0:
+                self.player_two.make_big()
 
         # Write the current game state to the board
         self.board.prepare()
@@ -190,11 +209,11 @@ class Pong:
 
         # If a player has scored, update their score and change the state to serving
         if self.ball.position[0] == 0:
-            self.player_one.score += 1
+            self.player_two.score += 1
             Glow.score()
             self.set_serving()
         elif self.ball.position[0] == Constants.length - 1:
-            self.player_two.score += 1
+            self.player_one.score += 1
             Glow.score()
             self.set_serving()
 
@@ -217,16 +236,18 @@ class Pong:
             self.ball.set_position([Constants.length - 4, self.player_two.position])
 
     def reverse_ball_direction(self):
-        self.ball.direction_y *= 1
+        self.ball.direction_y = random.randrange(-1, 1)
         self.ball.direction_x *= -1
         self.ball.set_speed(random.choice(Constants.speed))
 
     def check_winner(self):
         # If either player has a score greater than 9, they win
         if self.player_one.score > 9:
+            self.board.updateWinner(False)
             self.gameOver = True
             return True
         elif self.player_two.score > 9:
+            self.board.updateWinner(True)
             self.gameOver = True
             return True
         return False

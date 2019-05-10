@@ -64,6 +64,7 @@ class Board:
 
         self._length = length
         self._height = height
+        self.full_clear()
         self.prepare()
         self.clearLastBoard(False)
 
@@ -93,6 +94,11 @@ class Board:
             self.serial_bus.set_background_color(SerialBus.Color.WHITE)
         else:
             self.serial_bus.set_background_color(SerialBus.Color.BLACK)
+
+    def full_clear(self):
+        self._board = [[False] * self._length for _ in range(self._height)]
+        self._lastBoard = [[True] * self._length for _ in range(self._height)]
+        self.draw()
 
     # Set our board to be completely empty
     def clear(self):
@@ -142,8 +148,7 @@ class Board:
         if not 0 <= num <= 9:
             num = 9
 
-        self.draw_score(True, num)
-        self.draw_score(False, num)
+        self.draw_score(player_two, num)
 
 
     # debated func should just update a single bat, but decided on it updating both.
@@ -206,4 +211,4 @@ class Board:
         offsetY = 4 if playerTwo else 1
 
         for position in self._letters:
-            self._board[offsetY + position[1]][offsetX + position[0]] = True
+            self._board[offsetY + position[1]][offsetX + position[0]] = BoardPiece.TEXT

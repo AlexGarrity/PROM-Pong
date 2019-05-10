@@ -1,6 +1,4 @@
 
-# Deprecated in favour of RPi.GPIO debouncing functionality
-# RPi offers much better response time
 class Debouncer:
 
     # The current state of the switch
@@ -42,15 +40,16 @@ class Debouncer:
             self.change_state()
 
     def detect_state_change(self):
-        if self.signal_history[2] > self.signal_history[1] > self.signal_history[0]:
+        if self.signal_history[2] >= self.signal_history[1] >= self.signal_history[0]:
             if abs(self.signal_history[0] - self.signal_history[2]) > self.stability_threshold:
-                return True
-        elif self.signal_history[0] > self.signal_history[1] > self.signal_history[2]:
+                return 1
+        elif self.signal_history[0] >= self.signal_history[1] >= self.signal_history[2]:
             if abs(self.signal_history[0] - self.signal_history[2]) > self.stability_threshold:
-                return True
-        return False
+                return 1
+        return 0
 
     def add_to_history(self):
+        print ("Current signal: %i" % self.current_signal)
         self.signal_history.append(self.current_signal)
         if len(self.signal_history) > 3:
             self.signal_history.pop(0)

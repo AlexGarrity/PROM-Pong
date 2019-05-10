@@ -1,6 +1,7 @@
 import I2CBus
 import GPIO
 import Constants
+import Debouncer
 
 from math import log
 
@@ -36,10 +37,15 @@ class JoystickController:
 
     def __init__(self, resistor_channel, button_1_gpio, button_2_gpio, sw_debounce):
         self.control_bus = I2CBus.I2CBus(0x21)
+        self.debouncer = Debouncer.Debouncer(0, 1, 0.4)
+        self.sw_debounce = sw_debounce
 
         self.resistor_address = resistor_channel
         self.button_1_address = button_1_gpio
         self.button_2_address = button_2_gpio
+
+        GPIO.add_channel(self.button_1_address, False)
+        GPIO.add_channel(self.button_2_address, False)
 
         self.resistor_position = self.get_resistor_position()
         self.button_1_pressed = False
@@ -49,10 +55,16 @@ class JoystickController:
         self.last_resistor_position = self.current_resistor_position
         self.current_resistor_position = self.get_resistor_position()
 
+        self.debouncer.update()
+        self.get_button_state()
 
-    def get_button_state(self, debounce):
+    def get_button_state(self):
+            if self.sw_debounce:
+                self.debouncer.set_signal(GPIO.get_channel_status(self.button_2_address))
+                self.button_2_pressed = self.debouncer.get_state()
+            else:
+                self.button_2_pressed = GPIO.get_channel_status(self.button_2_address)
             self.button_1_pressed = GPIO.get_channel_status(self.button_1_address)
-            self.button_2_pressed = GPIO.get_channel_status(self.button_2_address)
 
     def get_resistor_position(self):
         if self.control_bus is not None:
@@ -65,5 +77,3 @@ class JoystickController:
 
     def get_resistor_screen_position(self):
         return self.resistor_position // self.voltage_interval
-    # def get_button_states(self):
-        # Set I2C to get the

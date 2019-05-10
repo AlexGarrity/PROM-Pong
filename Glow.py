@@ -17,7 +17,7 @@ def score():
                 print("Turning off " + leds[led][0])
                 leds[led][1] = 0
             glow.color(leds[led][0], leds[led][1])
-        time.sleep(0.125)
+        time.sleep(0.0625)
 
     for led in range(6):
         leds[led][1] = 0

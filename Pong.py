@@ -4,7 +4,7 @@ import Constants
 import Timing
 import JoystickController
 import Glow
-
+import Sound
 
 class Ball:
     position = [3, Constants.height // 2]
@@ -131,6 +131,7 @@ class Pong:
         self.board.updateScore(0, False)
         self.board.updateScore(0, True)
 
+        Sound.start()
         # Run the game loop until the game is over
         while not self.gameOver:
             self.game_loop()
@@ -240,6 +241,8 @@ class Pong:
         self.ball.direction_y = random.randrange(-1, 1)
         self.ball.direction_x *= -1
         self.ball.set_speed(random.choice(Constants.speed))
+
+        Sound.hit()
 
     def check_winner(self):
         # If either player has a score greater than 9, they win

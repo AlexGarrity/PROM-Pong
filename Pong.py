@@ -51,7 +51,7 @@ class Bat:
     score = 0
 
     is_big = False
-    can_big = True
+    can_big = 2
     big_time = Constants.big_time
 
     def __init__(self, position=None):
@@ -89,9 +89,11 @@ class Bat:
             self.position = (18 if self.is_big else 22)
 
     def make_big(self):
-        if self.can_big:
-            self.is_big = True
-            self.can_big = False
+        if self.can_big > 0:
+            if not self.is_big:
+                self.big_time = Constants.big_time
+                self.is_big = True
+                self.can_big -= 1
 
     def check_hit(self, ball_y):
         if not self.is_big:

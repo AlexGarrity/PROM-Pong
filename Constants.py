@@ -17,4 +17,4 @@ button_code_11 = 0x00
 button_code_12 = 0x00
 
 # Player settings
-big_time = 5.0
+big_time = 15.0

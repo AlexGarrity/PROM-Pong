@@ -76,4 +76,4 @@ class JoystickController:
         return None
 
     def get_resistor_screen_position(self):
-        return self.resistor_position // self.voltage_interval
+        return Constants.height - (self.resistor_position // self.voltage_interval)

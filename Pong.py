@@ -98,10 +98,10 @@ class Bat:
     def check_hit(self, ball_y):
         if not self.is_big:
             if -1 <= (self.position - ball_y) <= 1:
-                return True
+                return self.position - ball_y
         else:
             if -2 <= (self.position - ball_y) <= 3:
-                return True
+                return self.position - ball_y
         return False
 
 
@@ -191,13 +191,15 @@ class Pong:
                 self.ball.set_position([self.ball.position[0], self.ball.position[1] - 1])
 
             if self.ball.position[0] == 2 or self.ball.position[0] == 1:
-                if self.player_one.check_hit(self.ball.position[1]):
-                    self.reverse_ball_direction()
+                deltaOne = self.player_one.check_hit(self.ball.position[1])
+                if deltaOne:
+                    self.reverse_ball_direction(deltaOne)
                     Sound.play_async(Sound.hit_sequence)
 
             elif self.ball.position[0] == Constants.length - 3 or self.ball.position[0] == Constants.length - 2:
-                if self.player_two.check_hit(self.ball.position[1]):
-                    self.reverse_ball_direction()
+                deltaTwo = self.player_two.check_hit(self.ball.position[1])
+                if deltaTwo:
+                    self.reverse_ball_direction(deltaTwo)
                     Sound.play_async(Sound.hit_sequence)
 
             # Check if the player wants to be big
@@ -243,7 +245,14 @@ class Pong:
         else:
             self.ball.set_position([Constants.length - 4, self.player_two.position])
 
-    def reverse_ball_direction(self):
+    def reverse_ball_direction(self, delta = 0):
+        if delta < 0:
+            self.ball.direction_y = -1
+        elif delta > 0:
+            self.ball.direction_y = 1
+        else:
+            self.ball.direction_y = 0
+            
         self.ball.direction_y = random.randrange(-1, 1)
         self.ball.direction_x *= -1
         self.ball.set_speed(random.choice(Constants.speed))

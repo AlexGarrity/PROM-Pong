@@ -16,5 +16,8 @@ resistor_code = 0x10
 button_code_11 = 0x00
 button_code_12 = 0x00
 
+resistor_max = 3
+resistor_min = 0.0001   # Set to epsilon as dividing by 0 is bad
+
 # Player settings
 big_time = 15.0

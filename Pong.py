@@ -115,8 +115,8 @@ class Pong:
     player_two = Bat()
     ball = Ball()
 
-    player_one_controller = JoystickController.JoystickController(0x10, 10, 9, True)
-    player_two_controller = JoystickController.JoystickController(0x20, 0x00, 0x00, True)
+    player_one_controller = JoystickController.JoystickController(0x10, 10, 9, True, True)
+    player_two_controller = JoystickController.JoystickController(0x20, 0x00, 0x00, True, True)
 
     # Game state vars
     serving = True

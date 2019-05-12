@@ -14,6 +14,7 @@ class JoystickController:
     control_bus = None
     debouncer = None
     sw_debounce = False
+    scale_adc = False
 
     # These represent the commands used to get the states of the hardware
 
@@ -33,9 +34,11 @@ class JoystickController:
     button_1_pressed = None
     button_2_pressed = None
 
+    resistor_max = 4092
+    resistor_min = 0
     voltage_interval = 4092 // Constants.height
 
-    def __init__(self, resistor_channel, button_1_gpio, button_2_gpio, sw_debounce):
+    def __init__(self, resistor_channel, button_1_gpio, button_2_gpio, sw_debounce, scale_adc):
         self.control_bus = I2CBus.I2CBus(0x21)
         self.debouncer = Debouncer.Debouncer(0, 1, 0.4)
         self.sw_debounce = sw_debounce
@@ -50,6 +53,12 @@ class JoystickController:
         self.resistor_position = self.get_resistor_position()
         self.button_1_pressed = False
         self.button_2_pressed = False
+
+        if scale_adc:
+            self.scale_adc = True
+            self.resistor_max = (4092 / Constants.resistor_max) * 2.5
+            self.resistor_min = (4092 / Constants.resistor_max) * 0.5
+            self.voltage_interval = (self.resistor_max - self.resistor_min) // Constants.height
 
     def update(self):
         self.last_resistor_position = self.current_resistor_position
@@ -72,6 +81,9 @@ class JoystickController:
                 self.control_bus.set_command(self.resistor_address)    # Set command to the right pins
                 self.current_resistor_position = self.control_bus.read()
                 self.resistor_position = I2CBus.swap_high_low_byte(self.current_resistor_position)
+                if self.scale_adc:
+                    self.resistor_position = min(self.resistor_position, self.resistor_max)
+                    self.resistor_position = max(self.resistor_position, self.resistor_min)
                 return self.resistor_position
         return None
 

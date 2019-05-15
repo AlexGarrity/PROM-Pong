@@ -257,8 +257,6 @@ class Pong:
         self.ball.direction_x *= -1
         self.ball.set_speed(random.choice(Constants.speed))
 
-        Sound.hit()
-
     def check_winner(self):
         # If either player has a score greater than 9, they win
         if self.player_one.score > 9:

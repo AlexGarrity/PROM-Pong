@@ -73,6 +73,7 @@ class Board:
 
     # Create our output for the console to print out
     def draw(self):
+        self._board[int(self._ballY)][int(self._ballX)] = BoardPiece.BALL
         for y in range(self._height):
             for x in range(self._length):
                 if self._board[y][x] != self._lastBoard[y][x]:
@@ -84,7 +85,6 @@ class Board:
                         self.serial_bus.set_background_color(SerialBus.Color.BLACK)
                         self.serial_bus.write_to_position(" ", y, x)
         self._lastBoard = self._board
-        self.serial_bus.set_cursor_position(self._ballY, self._ballX)
 
     def set_background_from_position(self, piece_color):
         if piece_color == BoardPiece.NET:
@@ -158,6 +158,9 @@ class Board:
     # Reasoning is most likely both bats will change pos at same time
     # So it's just easier to not have to call this function twice (like we do for score)
     def updateBats(self, player_one_pos, player_two_pos, player_one_big, player_two_big):
+
+        player_one_pos = int(player_one_pos)
+        player_two_pos = int(player_two_pos)
         # Clear entire columns first.
         # useless var here but it looks nicer
         player_one_bat_x = 2
